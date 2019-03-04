@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet id="1" author="root">
+    
+        <!-- model -->
+		<createTable tableName="act_de_model">
+			<column name="id" type="varchar(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(400)">
+				<constraints nullable="false" />
+			</column>
+			<column name="model_key" type="varchar(400)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(4000)">
+				<constraints nullable="true" />
+			</column>
+			<column name="model_comment" type="varchar(4000)">
+				<constraints nullable="true" />
+			</column>
+			<column name="created" type="datetime(6)">
+				<constraints nullable="true" />
+			</column>
+			<column name="created_by" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="last_updated" type="datetime(6)">
+				<constraints nullable="true" />
+			</column>
+			<column name="last_updated_by" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="version" type="int">
+				<constraints nullable="true" />
+			</column>
+			<column name="model_editor_json" type="longtext">
+				<constraints nullable="true" />
+			</column>
+			<column name="thumbnail" type="longblob">
+				<constraints nullable="true" />
+			</column>
+			<column name="model_type" type="int">
+                <constraints nullable="true" />
+            </column>
+		</createTable>
+        
+        <createIndex indexName="idx_proc_mod_created"
+            tableName="act_de_model" unique="false">
+            <column name="created_by" />
+        </createIndex>
+        
+        <!-- Model history -->
+        <createTable tableName="act_de_model_history">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="varchar(400)">
+                <constraints nullable="false" />
+            </column>
+            <column name="model_key" type="varchar(400)">
+				<constraints nullable="false" />
+			</column>
+            <column name="description" type="varchar(4000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="model_comment" type="varchar(4000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created" type="datetime(6)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated" type="datetime(6)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="removal_date" type="datetime(6)">
+                <constraints nullable="true" />
+            </column>
+            <column name="version" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="model_editor_json" type="longtext">
+                <constraints nullable="true" />
+            </column>
+            <column name="model_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="model_type" type="int">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        
+        <createIndex indexName="idx_proc_mod_history_proc"
+            tableName="act_de_model_history" unique="false">
+            <column name="model_id" />
+        </createIndex>
+	
+		<!-- MODEL RELATION -->
+		
+		 <createTable tableName="act_de_model_relation">
+		 	<column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="parent_model_id" type="varchar(255)" />
+            <column name="model_id" type="varchar(255)" />
+            <column name="relation_type" type="varchar(255)" />
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="parent_model_id"
+			baseTableName="act_de_model_relation" constraintName="fk_relation_parent"
+			referencedColumnNames="id" referencedTableName="act_de_model" />
+			
+		<addForeignKeyConstraint baseColumnNames="model_id"
+			baseTableName="act_de_model_relation" constraintName="fk_relation_child"
+			referencedColumnNames="id" referencedTableName="act_de_model" />
+			
+	</changeSet>
+
+
+    <changeSet id="3" author="root">
+        <addColumn tableName="act_de_model">
+            <column  name="tenant_id" type="varchar(255)" />
+        </addColumn>
+        <addColumn tableName="act_de_model_history">
+            <column  name="tenant_id" type="varchar(255)" />
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
